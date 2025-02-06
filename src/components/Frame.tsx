@@ -38,7 +38,7 @@ function ExampleCard() {
 
 export default function Frame() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
-  const [context, setContext] = useState<Awaited<ReturnType<typeof sdk.context>>>();
+  const [context, setContext] = useState<Awaited<typeof sdk.context>>();
 
   const [added, setAdded] = useState(false);
   const [addFrameResult, setAddFrameResult] = useState("");
