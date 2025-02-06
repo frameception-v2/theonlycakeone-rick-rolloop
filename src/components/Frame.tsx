@@ -3,9 +3,8 @@
 import { useEffect, useCallback, useState } from "react";
 import sdk, {
   AddFrame,
-  SignIn as SignInCore,
   type Context,
-} from "@farcaster/frame-sdk";
+} from "@farcaster/frame-sdk"; // Removed unused SignInCore import
 import {
   Card,
   CardHeader,
@@ -40,25 +39,20 @@ function ExampleCard() {
 
 export default function Frame() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
-  const [context, setContext] = useState<Context.FrameContext>();
+  const [context, setContext] = useState<Context>(); // Fixed type definition
 
   const [added, setAdded] = useState(false);
-
   const [addFrameResult, setAddFrameResult] = useState("");
 
   const addFrame = useCallback(async () => {
     try {
       await sdk.actions.addFrame();
     } catch (error) {
-      if (error instanceof AddFrame.RejectedByUser) {
-        setAddFrameResult(`Not added: ${error.message}`);
+      if (error instanceof Error) { // Generalized error handling
+        setAddFrameResult(`Error: ${error.message}`);
+      } else {
+        setAddFrameResult(`Unknown error occurred`);
       }
-
-      if (error instanceof AddFrame.InvalidDomainManifest) {
-        setAddFrameResult(`Not added: ${error.message}`);
-      }
-
-      setAddFrameResult(`Error: ${error}`);
     }
   }, []);
 
@@ -72,7 +66,6 @@ export default function Frame() {
       setContext(context);
       setAdded(context.client.added);
 
-      // If frame isn't already added, prompt user to add it
       if (!context.client.added) {
         addFrame();
       }
@@ -102,17 +95,14 @@ export default function Frame() {
       });
 
       console.log("Calling ready");
-      sdk.actions.ready({});
+      sdk.actions.ready(); // Removed empty object parameter
 
-      // Set up a MIPD Store, and request Providers.
       const store = createStore();
-
-      // Subscribe to the MIPD Store.
       store.subscribe((providerDetails) => {
         console.log("PROVIDER DETAILS", providerDetails);
-        // => [EIP6963ProviderDetail, EIP6963ProviderDetail, ...]
       });
     };
+    
     if (sdk && !isSDKLoaded) {
       console.log("Calling load");
       setIsSDKLoaded(true);
