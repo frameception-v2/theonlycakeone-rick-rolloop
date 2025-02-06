@@ -3,7 +3,6 @@
 import { useEffect, useCallback, useState } from "react";
 import sdk, {
   AddFrame,
-  type Context, // Changed back to Context from FrameContext
 } from "@farcaster/frame-sdk";
 import {
   Card,
@@ -39,7 +38,7 @@ function ExampleCard() {
 
 export default function Frame() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
-  const [context, setContext] = useState<Context>(); // Changed type to Context
+  const [context, setContext] = useState<Awaited<ReturnType<typeof sdk.context>>>();
 
   const [added, setAdded] = useState(false);
   const [addFrameResult, setAddFrameResult] = useState("");
