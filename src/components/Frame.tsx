@@ -3,8 +3,8 @@
 import { useEffect, useCallback, useState } from "react";
 import sdk, {
   AddFrame,
-  type Context,
-} from "@farcaster/frame-sdk"; // Removed unused SignInCore import
+  type FrameContext, // Changed from 'Context' to 'FrameContext'
+} from "@farcaster/frame-sdk";
 import {
   Card,
   CardHeader,
@@ -39,7 +39,7 @@ function ExampleCard() {
 
 export default function Frame() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
-  const [context, setContext] = useState<Context>(); // Fixed type definition
+  const [context, setContext] = useState<FrameContext>(); // Changed type to FrameContext
 
   const [added, setAdded] = useState(false);
   const [addFrameResult, setAddFrameResult] = useState("");
@@ -48,7 +48,7 @@ export default function Frame() {
     try {
       await sdk.actions.addFrame();
     } catch (error) {
-      if (error instanceof Error) { // Generalized error handling
+      if (error instanceof Error) {
         setAddFrameResult(`Error: ${error.message}`);
       } else {
         setAddFrameResult(`Unknown error occurred`);
@@ -95,7 +95,7 @@ export default function Frame() {
       });
 
       console.log("Calling ready");
-      sdk.actions.ready(); // Removed empty object parameter
+      sdk.actions.ready();
 
       const store = createStore();
       store.subscribe((providerDetails) => {
